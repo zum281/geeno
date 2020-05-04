@@ -1,55 +1,45 @@
 import sys
-from PyQt5 import QtWidgets
+from PyQt5.QtWidgets import *
+from PyQt5.QtCore import Qt
+from PyQt5 import QtGui
 
-class Window(QtWidgets.QWidget):
-    def __init__(self):
-        super().__init__()
-        self.init_ui()
 
-    def init_ui(self):
+class MainWindow(QMainWindow):
+    def __init__(self, *args, **kwargs):
+        super(MainWindow, self).__init__(*args, **kwargs)
         self.setWindowTitle("Geeno")
-        h_box = QtWidgets.QHBoxLayout()
-        v_box = QtWidgets.QVBoxLayout()
+        # actions
+        quitAction = QAction("Quit", self)
+        quitAction.triggered.connect(self.close)
+        quitAction.setShortcut(QtGui.QKeySequence("Ctrl+q"))
 
-        self.title = QtWidgets.QLabel("Welcome to Geeno!")
-        self.ageLbl = QtWidgets.QLabel("Age: ")
-        self.ageEntry = QtWidgets.QLineEdit()
-        self.heightLbl = QtWidgets.QLabel("Height: ")
-        self.heightEntry = QtWidgets.QLineEdit()
-        self.weightLbl = QtWidgets.QLabel("Weight: ")
-        self.weightEntry = QtWidgets.QLineEdit()
-        self.sexLbl = QtWidgets.QLabel("Sex: ")
-        self.calcBtn = QtWidgets.QPushButton("Results")
+        # menu
+        menu = self.menuBar()
+        file_menu = menu.addMenu(u"&File")
+        file_menu.addSeparator()
+        file_menu.addAction(quitAction)
+        self.calcPage = CalcPage()
+        self.resultPage = ResultPage()
 
-        # Entries go here
+        self.pages = QStackedWidget(self)
+        self.pages.addWidget(self.calcPage)
+        self.pages.addWidget(self.resultPage)
+        self.setCentralWidget(self.pages)
+        self.pages.setCurrentWidget(self.calcPage)
 
-        # Layout
-        v_box.addWidget(self.title)
-        v_box.addStretch()
-        v_box.addWidget(self.ageLbl)
-        v_box.addWidget(self.ageEntry)
-        v_box.addStretch()
-        v_box.addWidget(self.heightLbl)
-        v_box.addWidget(self.heightEntry)
-        v_box.addStretch()
-        v_box.addWidget(self.weightLbl)
-        v_box.addWidget(self.weightEntry)
-        v_box.addStretch()
-        v_box.addWidget(self.sexLbl)
-        v_box.addStretch()
-        v_box.addWidget(self.calcBtn)
 
-        h_box.addLayout(v_box)
-        self.setLayout(h_box)
-        
-        self.calcBtn.clicked.connect(self.getResults)
-        self.show()
+class CalcPage(QWidget):
+    def __init__(self):
+        super(CalcPage, self).__init__()
+        btn = QPushButton("Result")
 
-    def getResults(self):
-       self.results = QtWidgets.QLabel("Results")
-       v_box.addStretch()
-       v_box.addWidget(self.results)
 
-app = QtWidgets.QApplication(sys.argv)
-geeno_window = Window()
-sys.exit(app.exec_())
+class ResultPage(QWidget):
+    def __init__(self):
+        super(ResultPage, self).__init__()
+
+
+app = QApplication(sys.argv)
+geeno = MainWindow()
+geeno.show()
+app.exec_()
