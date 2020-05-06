@@ -18,25 +18,55 @@ class MainWindow(QMainWindow):
         file_menu = menu.addMenu(u"&File")
         file_menu.addSeparator()
         file_menu.addAction(quitAction)
-        self.calcPage = CalcPage()
-        self.resultPage = ResultPage()
 
-        self.pages = QStackedWidget(self)
-        self.pages.addWidget(self.calcPage)
-        self.pages.addWidget(self.resultPage)
-        self.setCentralWidget(self.pages)
-        self.pages.setCurrentWidget(self.calcPage)
+        self.init_UI()
+
+    def init_UI(self):
+        self.layout = QStackedLayout()
+        self.calcPage = self.init_calcPage()
+        self.resultPage = self.init_resultPage()
+        self.layout.addWidget(self.calcPage)
+        self.layout.addWidget(self.resultPage)
+
+        self.layout.setCurrentWidget(self.calcPage)
+
+        widget = QWidget()
+        widget.setLayout(self.layout)
+        self.setCentralWidget(widget)
+
+    def init_calcPage(self):
+        layout = QGridLayout()
+        lblTitle = QLabel("Please insert input: ")
+        layout.addWidget(lblTitle, 0, 3)
+        lblAge = QLabel("Date of birth: ")
+        layout.addWidget(lblAge, 1, 0)
+        lblHeight = QLabel("Heigth: ")
+        layout.addWidget(lblHeight, 2, 0)
+        lblWeight = QLabel("Weight: ")
+        layout.addWidget(lblWeight, 3, 0)
+        lblSex = QLabel("Sex: ")
+        layout.addWidget(lblSex, 4, 0)
 
 
-class CalcPage(QWidget):
-    def __init__(self):
-        super(CalcPage, self).__init__()
-        btn = QPushButton("Result")
+        goToResults = QPushButton("Results")
+        goToResults.clicked.connect(lambda: self.layout.setCurrentWidget(self.resultPage))
+        layout.addWidget(goToResults, 5,2)
 
+        calcPage = QWidget()
+        calcPage.setLayout(layout)
 
-class ResultPage(QWidget):
-    def __init__(self):
-        super(ResultPage, self).__init__()
+        return calcPage
+
+    def init_resultPage(self):
+
+        layout = QGridLayout()
+        layout.addWidget(QLabel("I'm the second page"), 2,2)
+
+        resultPage = QWidget()
+        resultPage.setLayout(layout)
+
+        return resultPage
+
 
 
 app = QApplication(sys.argv)
