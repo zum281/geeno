@@ -107,12 +107,23 @@ class MainWindow(QMainWindow):
 		layout.addWidget(lblSex, 5, 0)
 		self.entrySexM = QRadioButton("M")
 		layout.addWidget(self.entrySexM, 5, 1)
-		self.entrySexR = QRadioButton("F")
-		layout.addWidget(self.entrySexR, 5, 2)
+		self.entrySexF = QRadioButton("F")
+		layout.addWidget(self.entrySexF, 5, 2)
 
+		# laf
+		lblLaf = QLabel("LAF: ")
+		layout.addWidget(lblLaf, 6, 0)
+		self.entryLaf = QLineEdit()
+		self.entryLaf.setValidator(QtGui.QDoubleValidator())
+		layout.addWidget(self.entryLaf, 6, 1)
+
+
+		self.clearAllBtn = QPushButton("Clear")
+		self.clearAllBtn.clicked.connect(lambda: self.clearAll())
+		layout.addWidget(self.clearAllBtn, 7, 1)
 		self.goToResults = QPushButton("Results")
 		self.goToResults.clicked.connect(lambda: self.getInput())
-		layout.addWidget(self.goToResults, 6, 2)
+		layout.addWidget(self.goToResults, 7, 2)
 
 		calcPage = QWidget()
 		calcPage.setLayout(layout)
@@ -134,7 +145,8 @@ class MainWindow(QMainWindow):
 		layout.addWidget(lblWeight, 4, 0)
 		lblSex = QLabel("Sex: "+self.sex)
 		layout.addWidget(lblSex, 5, 0)
-
+		lblLaf = QLabel("LAF: " + str(self.laf))
+		layout.addWidget(lblLaf, 6, 0)
 		# BMR
 		bmr = getBmr(int(self.age), self.sex,  float(self.weight), int(self.height))
 		lblBmr = QLabel("bmr: "+ str(bmr))
@@ -146,17 +158,18 @@ class MainWindow(QMainWindow):
 		lblBmiRange = QLabel("The patient is in the following range: "+str(getBmiRange(bmi)))
 		layout.addWidget(lblBmiRange, 3, 1)
 
+		# TEE (Total Energy Expenditure (?))
+		layout.addWidget(QLabel("TEE: "+str(bmr*float(self.laf))), 4, 1 )
+		layout.addWidget(QLabel("Thank you for using geeno!"), 7,0)
 
-		layout.addWidget(QLabel("Thank you for using geeno!"), 6,0)
 
-
-		goBackBtn = QPushButton("Go Back")
-		goBackBtn.clicked.connect(lambda: self.layout.setCurrentWidget(self.calcPage))
-		layout.addWidget(goBackBtn, 7, 0)
+		self.goBackBtn = QPushButton("Go Back")
+		self.goBackBtn.clicked.connect(lambda: self.goBack())
+		layout.addWidget(self.goBackBtn, 8, 0)
 
 		exitBtn = QPushButton("Quit")
 		exitBtn.clicked.connect(self.close)
-		layout.addWidget(exitBtn, 7, 1)
+		layout.addWidget(exitBtn, 8, 1)
 
 		resultPage = QWidget()
 		resultPage.setLayout(layout)
@@ -164,19 +177,41 @@ class MainWindow(QMainWindow):
 		return resultPage
 
 	def getInput(self):
-		sender = self.sender()
-		if sender is self.goToResults:
-			self.birthday = self.entryAge.date()
-			self.age = getAge(self.birthday)
-			self.height = self.entryHeight.text()
-			self.weight = self.entryWeight.text()
-			if self.entrySexM.isChecked():
-				self.sex = 'M'
-			else:
-				self.sex = 'F'
+		self.birthday = self.entryAge.date()
+		self.age = getAge(self.birthday)
+		self.height = self.entryHeight.text()
+		self.weight = self.entryWeight.text()
+		if self.entrySexM.isChecked():
+			self.sex = 'M'
+		else:
+			self.sex = 'F'
+		self.laf = self.entryLaf.text()
+		try:
+			float(self.laf)
+		except:
+			self.laf = 0
 		self.resultPage = self.init_resultPage()
 		self.layout.addWidget(self.resultPage)
 		self.layout.setCurrentWidget(self.resultPage)
+
+	def clearAll(self):
+		self.entryAge.setDate(QDate.currentDate())
+		# Probabilmente c'è un modo più intelligente per farlo...
+		self.entrySexM.setAutoExclusive(False);
+		self.entrySexM.setChecked(False);
+		self.entrySexM.setAutoExclusive(True);
+		self.entrySexF.setAutoExclusive(False);
+		self.entrySexF.setChecked(False);
+		self.entrySexF.setAutoExclusive(True);
+
+		self.entryHeight.clear()
+		self.entryWeight.clear()
+		self.entryLaf.clear()
+
+	def goBack(self):
+		self.layout.setCurrentWidget(self.calcPage)
+		self.clearAll()
+
 app = QApplication(sys.argv)
 geeno = MainWindow()
 geeno.show()
