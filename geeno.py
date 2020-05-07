@@ -105,10 +105,10 @@ class MainWindow(QMainWindow):
 		# sex
 		lblSex = QLabel("Sex: ")
 		layout.addWidget(lblSex, 5, 0)
-		self.entrySex = QRadioButton("M")
-		layout.addWidget(self.entrySex, 5, 1)
-		self.entrySex = QRadioButton("F")
-		layout.addWidget(self.entrySex, 5, 2)
+		self.entrySexM = QRadioButton("M")
+		layout.addWidget(self.entrySexM, 5, 1)
+		self.entrySexR = QRadioButton("F")
+		layout.addWidget(self.entrySexR, 5, 2)
 
 		self.goToResults = QPushButton("Results")
 		self.goToResults.clicked.connect(lambda: self.getInput())
@@ -132,29 +132,31 @@ class MainWindow(QMainWindow):
 		layout.addWidget(lblHeight, 3, 0)
 		lblWeight = QLabel("Weight: "+self.weight)
 		layout.addWidget(lblWeight, 4, 0)
-		lblSex = QLabel("Sex: ")
+		lblSex = QLabel("Sex: "+self.sex)
 		layout.addWidget(lblSex, 5, 0)
 
 		# BMR
-		lblBmr = QLabel("bmr: ")
+		bmr = getBmr(int(self.age), self.sex,  float(self.weight), int(self.height))
+		lblBmr = QLabel("bmr: "+ str(bmr))
 		layout.addWidget(lblBmr, 1, 1)
 		# BMI
-		bmi = getBmi(int(self.weight), int(self.height))
+		bmi = getBmi(float(self.weight), int(self.height))
 		lblBmi = QLabel("bmi: " + str(bmi))
 		layout.addWidget(lblBmi, 2, 1)
 		lblBmiRange = QLabel("The patient is in the following range: "+str(getBmiRange(bmi)))
 		layout.addWidget(lblBmiRange, 3, 1)
 
-		layout.addWidget(QLabel("Thank you for using geeno!"), 5,0)
+
+		layout.addWidget(QLabel("Thank you for using geeno!"), 6,0)
 
 
 		goBackBtn = QPushButton("Go Back")
 		goBackBtn.clicked.connect(lambda: self.layout.setCurrentWidget(self.calcPage))
-		layout.addWidget(goBackBtn, 6, 0)
+		layout.addWidget(goBackBtn, 7, 0)
 
 		exitBtn = QPushButton("Quit")
 		exitBtn.clicked.connect(self.close)
-		layout.addWidget(exitBtn, 6, 1)
+		layout.addWidget(exitBtn, 7, 1)
 
 		resultPage = QWidget()
 		resultPage.setLayout(layout)
@@ -168,6 +170,10 @@ class MainWindow(QMainWindow):
 			self.age = getAge(self.birthday)
 			self.height = self.entryHeight.text()
 			self.weight = self.entryWeight.text()
+			if self.entrySexM.isChecked():
+				self.sex = 'M'
+			else:
+				self.sex = 'F'
 		self.resultPage = self.init_resultPage()
 		self.layout.addWidget(self.resultPage)
 		self.layout.setCurrentWidget(self.resultPage)
