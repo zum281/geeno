@@ -63,8 +63,10 @@ class MainWindow(QMainWindow):
 		file_menu.addAction(quitAction)
 
 		self.init_UI()
-
+		self.setStyleSheet(open("styles.css").read())
 	def init_UI(self):
+
+
 		self.layout = QStackedLayout()
 		self.calcPage = self.init_calcPage()
 		#self.resultPage = self.init_resultPage()
@@ -78,6 +80,7 @@ class MainWindow(QMainWindow):
 		self.setCentralWidget(widget)
 
 	def init_calcPage(self):
+		self.setGeometry(300, 100, 400, 200)
 		layout = QGridLayout()
 		lblWelcome = QLabel("GEENO Calculator")
 		layout.addWidget(lblWelcome, 0,2)
@@ -129,6 +132,7 @@ class MainWindow(QMainWindow):
 		layout.addWidget(self.clearAllBtn, 7, 1)
 		self.goToResults = QPushButton("Results")
 		self.goToResults.clicked.connect(lambda: self.getInput())
+		self.goToResults.setAutoDefault(True)
 		layout.addWidget(self.goToResults, 7, 2)
 
 		calcPage = QWidget()
