@@ -3,6 +3,12 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt, QDate
 from PyQt5 import QtGui
 
+def error_message():
+	msg = QMessageBox()
+	msg.setText("Invalid Input")
+	msg.setInformativeText("Please insert a valid input.")
+	msg.setWindowTitle("Error")
+	msg.exec_()
 
 def getAge(birthday):
 	now = QDate.currentDate()
@@ -177,22 +183,26 @@ class MainWindow(QMainWindow):
 		return resultPage
 
 	def getInput(self):
-		self.birthday = self.entryAge.date()
-		self.age = getAge(self.birthday)
-		self.height = self.entryHeight.text()
-		self.weight = self.entryWeight.text()
-		if self.entrySexM.isChecked():
-			self.sex = 'M'
-		else:
-			self.sex = 'F'
-		self.laf = self.entryLaf.text()
 		try:
-			float(self.laf)
+			self.birthday = self.entryAge.date()
+			self.age = getAge(self.birthday)
+			self.height = self.entryHeight.text()
+			self.weight = self.entryWeight.text()
+			if self.entrySexM.isChecked():
+				self.sex = 'M'
+			else:
+				self.sex = 'F'
+			self.laf = self.entryLaf.text()
+			try:
+				float(self.laf)
+			except:
+				self.laf = 0
+			self.resultPage = self.init_resultPage()
+			self.layout.addWidget(self.resultPage)
+			self.layout.setCurrentWidget(self.resultPage)
 		except:
-			self.laf = 0
-		self.resultPage = self.init_resultPage()
-		self.layout.addWidget(self.resultPage)
-		self.layout.setCurrentWidget(self.resultPage)
+			error_message()
+			self.clearAll()
 
 	def clearAll(self):
 		self.entryAge.setDate(QDate.currentDate())
