@@ -1,0 +1,25 @@
+* {
+	padding-top: 15px;
+	font-size: 10pt;
+}
+
+QLineEdit, QDateEdit {
+	padding: 6 0px;
+}
+
+QMenuBar {
+	padding: 4px;
+}
+
+QPushButton {
+	padding: 6 10px;
+	margin: 6 0px;
+}
+
+QRadioButton {
+	padding: 2 0px;
+}
+
+#lblWelcome {
+	font-size: 16pt;
+}
