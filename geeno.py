@@ -1,12 +1,21 @@
 import sys
+import os
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt, QDate
 from PyQt5 import QtGui
 
-stylesheet = open("style.qss").read()
+
+
+def resource_path(relative_path):
+     if hasattr(sys, '_MEIPASS'):
+         return os.path.join(sys._MEIPASS, relative_path)
+     return os.path.join(os.path.abspath("."), relative_path)
+
+stylesheet = open(resource_path("style.qss")).read()
 
 def error_message():
 	msg = QMessageBox()
+	msg.setGeometry(300, 100, 300, 250)
 	msg.setText("Invalid Input")
 	msg.setInformativeText("Please insert a valid input.")
 	msg.setWindowTitle("Error")
@@ -145,35 +154,35 @@ class MainWindow(QMainWindow):
 	def init_resultPage(self):
 		layout = QGridLayout()
 
-		layout.addWidget(QLabel("Patient Info", objectName='patientInfo'), 0, 0)
-		layout.addWidget(QLabel("Results", objectName='results'), 0, 1)
-		lblBirthDay = QLabel("Birthday: " + self.birthday.toString('d/MM/yyyy'))
+		layout.addWidget(QLabel("<i>Patient Info</i>", objectName='patientInfo'), 0, 0)
+		layout.addWidget(QLabel("<i>Results</i>", objectName='results'), 0, 1)
+		lblBirthDay = QLabel("<b>Birthday:</b> " + self.birthday.toString('d/MM/yyyy'))
 		layout.addWidget(lblBirthDay, 1, 0)
-		lblAge = QLabel("Age: "+str(self.age))
+		lblAge = QLabel("<b>Age:</b> "+str(self.age))
 		layout.addWidget(lblAge, 2, 0)
-		lblHeight = QLabel("Height: "+self.height)
+		lblHeight = QLabel("<b>Height:</b> "+self.height)
 		layout.addWidget(lblHeight, 3, 0)
-		lblWeight = QLabel("Weight: "+self.weight)
+		lblWeight = QLabel("<b>Weight:</b> "+self.weight)
 		layout.addWidget(lblWeight, 4, 0)
-		lblSex = QLabel("Sex: "+self.sex)
+		lblSex = QLabel("<b>Sex:</b> "+self.sex)
 		layout.addWidget(lblSex, 5, 0)
-		lblLaf = QLabel("LAF: " + str(self.laf))
+		lblLaf = QLabel("<b>LAF:</b> " + str(self.laf))
 		layout.addWidget(lblLaf, 6, 0)
 		# BMR
 		self.bmr = getBmr(int(self.age), self.sex,  float(self.weight), int(self.height))
-		lblBmr = QLabel("bmr: "+ str(self.bmr))
+		lblBmr = QLabel("<b>BMR:</b> "+ str(self.bmr))
 		layout.addWidget(lblBmr, 1, 1)
 		# BMI
 		bmi = getBmi(float(self.weight), int(self.height))
-		lblBmi = QLabel("bmi: " + str(bmi))
+		lblBmi = QLabel("<b>BMI:</b> " + str(bmi))
 		layout.addWidget(lblBmi, 2, 1)
-		lblBmiRange = QLabel("The patient is in the following range: "+str(getBmiRange(bmi)))
+		lblBmiRange = QLabel("<b>BMI range:</b>\n"+str(getBmiRange(bmi)))
 		layout.addWidget(lblBmiRange, 3, 1)
 
 		# TEE (Total Energy Expenditure (?))
 		self.tee = round(self.bmr*float(self.laf), 2)
-		layout.addWidget(QLabel("TEE: "+str(self.tee)), 4, 1 )
-		layout.addWidget(QLabel("Thank you for using geeno!"), 7,0)
+		layout.addWidget(QLabel("<b>TEE:</b> "+str(self.tee)), 4, 1 )
+	#	layout.addWidget(QLabel("Thank you for using geeno!"), 7,0)
 
 		self.anotherBtn = QPushButton("New")
 		self.anotherBtn.clicked.connect(lambda: self.goBack())
