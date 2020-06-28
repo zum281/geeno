@@ -244,9 +244,13 @@ class MainWindow(QMainWindow):
 		self.goToStartBtn.clicked.connect(lambda: self.goBack())
 		layout.addWidget(self.goToStartBtn, 12, 0)
 
+		self.goBackBtn = QPushButton("Go Back")
+		self.goBackBtn.clicked.connect(lambda: self.layout.setCurrentWidget(self.resultPage))
+		layout.addWidget(self.goBackBtn, 13, 0)
+  
 		exitBtn = QPushButton("Quit")
 		exitBtn.clicked.connect(self.close)
-		layout.addWidget(exitBtn, 13, 0)
+		layout.addWidget(exitBtn, 14, 0)
 
 		objectivePage = QWidget()
 		objectivePage.setLayout(layout)
@@ -314,7 +318,7 @@ class MainWindow(QMainWindow):
 		# Probabilmente c'è un modo più intelligente per farlo...
 		self.entrySexM.setAutoExclusive(False);
 		self.entrySexM.setChecked(False);
-		self.entrySexM.setAutoExclusive(True);
+		#self.entrySexM.setAutoExclusive(True);
 		self.entrySexF.setAutoExclusive(False);
 		self.entrySexF.setChecked(False);
 		self.entrySexF.setAutoExclusive(True);
